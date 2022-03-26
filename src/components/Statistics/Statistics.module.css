@@ -1,0 +1,48 @@
+.Statistics {
+  position: relative;
+  display: flex;
+  margin-top: 10px;
+}
+
+.estimate {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 150px;
+  box-shadow: 4px 4px 17px 0px rgba(169, 176, 53, 0.2);
+}
+
+.estimate:not(:last-child) {
+  margin-right: 40px;
+}
+
+.estimate:nth-child(2n) {
+  background-color: #ffc500;
+}
+
+.percentage {
+  position: absolute;
+  top: -15px;
+  left: 105px;
+  height: 50px;
+  width: 50px;
+
+  font-weight: 700;
+
+  background-color: #ffc500;
+}
+
+.option {
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.3em;
+}
+
+.number {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3em;
+  margin-bottom: 20px;
+}
