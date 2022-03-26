@@ -12,7 +12,9 @@ function Feedback({ options, onLeaveFeedback }) {
           key={option}
           name={option}
           type="button"
-          onClick={onLeaveFeedback}
+          onClick={(e) => {
+            onLeaveFeedback(e.target.name);
+          }}
         >
           {option}
         </button>

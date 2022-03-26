@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useReducer } from 'react';
 
 import Hero from '../components/Hero';
 import Statistics from '../components/Statistics';
@@ -7,60 +7,62 @@ import Notification from '../components/Notification';
 
 import s from './App.module.css';
 
-class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
 
-  countTotalFeedback = () =>
-    Object.values(this.state).reduce(
-      (previousValue, number) => previousValue + number,
-      0,
-    );
+function reducerCounter(state, action) {
 
-  countPositiveFeedbackPercentage = () => {
-    if (!this.countTotalFeedback()) {
+  switch (action.type) {
+    case "good":
+      return {...state, good: state.good + action.payload}
+    case "neutral":
+      return {...state, neutral: state.neutral + action.payload}
+    case "bad":
+      return {...state, bad: state.bad + action.payload}
+    default:
+      return state;
+  }
+  
+}
+
+export default function App() {
+  const [state, dispatch] = useReducer(reducerCounter, { good: 0, neutral: 0, bad: 0 });
+  
+   const makeOptions = () => Object.keys(state);
+
+  const countTotalFeedback = () => Object.values(state).reduce(
+       (previousValue, number) => previousValue + number,
+       0,
+     );
+
+  const countPositiveFeedbackPercentage = () => {
+    if (!countTotalFeedback()) {
       return '0%';
     }
+
     return `${Math.round(
-      (this.state.good / this.countTotalFeedback()) * 100,
+      (state.good / countTotalFeedback()) * 100,
     )}%`;
-  };
+  }; 
+  
+  const handleClickFeedback = name => {
+    dispatch({ type: name, payload: 1 });
+  }
 
-  makeOptions = () => Object.keys(this.state);
-
-  handleClickFeedback = e => {
-    this.setState(previousValue => {
-      return {
-        [e.target.name]: (previousValue[e.target.name] += 1),
-      };
-    });
-  };
-
-  render() {
-    return (
-      <div className={s.container}>
+    return (<div className={s.container}>
         <Hero />
         <Feedback
-          options={this.makeOptions()}
-          onLeaveFeedback={this.handleClickFeedback}
+          options={makeOptions()}
+          onLeaveFeedback={handleClickFeedback}
         />
-        {Object.values(this.state).some(number => number > 0) ? (
+        {Object.values(state).some(number => number > 0) ? (
           <Statistics
-            good={this.state.good}
-            neutral={this.state.neutral}
-            bad={this.state.bad}
-            total={this.countTotalFeedback()}
-            positivePercentage={this.countPositiveFeedbackPercentage()}
+            good={state.good}
+            neutral={state.neutral}
+            bad={state.bad}
+            total={countTotalFeedback()}
+            positivePercentage={countPositiveFeedbackPercentage()}
           />
         ) : (
           <Notification message="There is no feedback" />
         )}
-      </div>
-    );
-  }
+      </div>)
 }
-
-export default App;
